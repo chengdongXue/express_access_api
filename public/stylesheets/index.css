@@ -1,0 +1,24 @@
+.changeImg {
+    position: absolute;
+    left: 50%;
+    margin-left: -100px;
+    width: 200px;
+    height: 200px;
+}
+
+.authed {
+    font-size: 20px;
+    color: red;
+}
+
+.anon {
+    font-size: 20px;
+    color: green;
+}
+
+.controllerInputPosition {
+    position: absolute;
+    top: 400px;
+    left: 50%;
+    margin-left: -68px;
+}
