@@ -31,8 +31,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
 app.use('/', indexRouter);
-app.use('/users/:userId/books/:bookId', usersRouter);
-app.use('/passed',jqueryRouter);
+app.use('/users', usersRouter);
+app.use('',jqueryRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

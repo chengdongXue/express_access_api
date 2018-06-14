@@ -9,9 +9,9 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 // GET users listing.
 router.get('/', function(req, res, next) {
-  res.send(req.params);
+  //res.send(req.params);
  // console.log("bookId is set to " + req.params.bookId);
-  //res.render('users',{title:'yes. she comes in my room'});
+  res.render('users',{title:'yes. she comes in my room'});
 });
 
 module.exports = router;
