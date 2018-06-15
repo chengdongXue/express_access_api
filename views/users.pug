@@ -3,16 +3,45 @@ extends layout
 block content
   script(type='text/javascript').
     $(function(){
-      $("#submit").bind('click', function () {
-        $.ajax({
-          url: 'http://localhost:3000/passed',
-          success: function (res) {
-            if(res){
-              var html = '';
-              for(var i = 0; i < res.length; i++){
-                html+='<li>ID is:'+res[i].id+'</li><li>NAME is:'+res[i].name+'</li><li>ADRESS is:'+res[i].address+'</li>'
+
+      var getTypeData = function () {
+          $.ajax({
+              method: 'get',
+              async:true,
+              url: 'http://localhost:3000/api/getTypeJsonData',
+              success: function (res) {
+                  if (res.success) {
+                      var html = '';
+                      $("#loading").html(res.msg);
+                      html = '<option value="none">None</option>';
+                      for (var i = 0; i < res.jsonData.length; i++) {
+                          html +='<option value="'+res.jsonData[i].type+'">'+res.jsonData[i].name+'</option>'
+                      }
+                      $("#sel").html(html);
+                  }
+              },
+              error: function (err) {
+                  console.log('server response is error', err);
               }
-              console.log(11);
+          });
+      };
+
+      getTypeData();
+
+      $("#review").bind('click', function () {
+        var typeVal = $('select#sel option:selected').val();
+        $.ajax({
+          method: 'get',
+          async:true,
+          data: {"type": typeVal},
+          url: 'http://localhost:3000/api/getLessonAllData',
+          success: function (res) {
+            if(res.success){
+              var html = '';
+              $("#loading").html(res.msg);
+              for(var i = 0; i < res.jsonData.length; i++){
+                html+='<li>NAME is:'+res.jsonData[i].name+'</li>'
+              }
               $("#ulID").html(html);
             }
           },
@@ -21,11 +50,40 @@ block content
           }
         });
       });
+
+        $("#submit").bind('click', function () {
+            var name = $("#name").val();
+            var type = $("#type").val();
+            var obj = {
+                "name":name,
+                "type":type
+            };
+            $.ajax({
+                method: 'post',
+                async: true,
+                data: obj,
+                url: 'http://localhost:3000/api/createLesson',
+                success: function (res) {
+                    if (res.success) {
+                        var html = '';
+                        $("#loading").html(res.msg);
+                        getTypeData();
+                    }
+                },
+                error: function (err) {
+                    console.log('server response is error', err);
+                }
+            });
+        });
+
     });
   h2(style='text-align:center;color:red;') Welcome to #{title}
-  p(style='text-align:center;color:green;') Welcome to #{title}
+  p(style='text-align:center;color:green;font-size:20px;' id="loading")
   div(style='text-align:center;')
-    input( id='username' name='username' type='text' style='text-align:center;')
-    input( id='password' name='password' type='passWord' style='text-align:center;')
+    input( id='name' name='name' type='text' style='text-align:center;height:30px;' placeholder="请输入名称")
+    input( id='type' name='type' type='text' style='text-align:center;height:30px;' placeholder="请输入名类型")
+    div(style="width:100px;margin:0 auto; overflow:hidden;")
+      <select name="products" id="sel" style="margin-top:10px;margin-bottom:10px;width:100px;height:30px;"></select>
     input( id='submit' name='submit' type='button' style='text-align:center;' value='submit')
+    input( id='review' name='review' type='button' style='text-align:center;margin-left:20px;' value='review')
   ul(id='ulID' style='text-align:center;color:red;list-style: none;')

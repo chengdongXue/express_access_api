@@ -29,7 +29,13 @@ router.get('/api/createMongoDB', function(req, resRouter) {
 });
 
 router.get('/api/getLessonAllData',function(request,response){
-
+    var whereStr = null;
+    var typeVal = request.query['type'];
+    if(typeVal == 'none'){
+        whereStr = {};
+    }else{
+        whereStr = {"type":typeVal};
+    }
     var responseObj = {
         "success":true,
         "msg":"get data on successful",
@@ -39,12 +45,54 @@ router.get('/api/getLessonAllData',function(request,response){
     MongoClient.connect(url,function(err,db){
         if(err) throw err;
         var database = db.db("runoob");
-        database.collection("lesson").find({}).toArray(function(err,result){
+        //var whereStr = {$or: [{"name": "英语"},{"name": "美术"},{"type":"zz"}]};
+        database.collection("lesson").find(whereStr).sort({"type":1}).toArray(function(err,result){
             if (err) throw err;
             responseObj.jsonData = result;
             response.json(responseObj);
             db.close();
         })
+    });
+});
+
+router.get('/api/getTypeJsonData',function(request,response){
+    var responseObj = {
+        "success":true,
+        "msg":"get data on successful",
+        "jsonData":null
+    };
+
+    MongoClient.connect(url,function(err,db){
+        if(err) throw err;
+        var database = db.db("runoob");
+        var whereStr = {};
+        database.collection("lesson").find(whereStr,{'name':1,'type':1}).sort({"type":1}).toArray(function(err,result){
+            if (err) throw err;
+            responseObj.jsonData = result;
+            response.json(responseObj);
+            db.close();
+        })
+    });
+});
+
+router.post('/api/createLesson', function(request,response) {
+
+    console.log(request.body);
+
+    var responseObj = {
+        "success":true,
+        "msg":""
+    };
+
+    MongoClient.connect(url,function(err,db){
+        if(err) throw err;
+        var database = db.db("runoob");
+        database.collection("lesson").insertOne(request.body,function(err,res){
+            if (err) throw err;
+            responseObj.msg = "插入的文档数量为: " + res.insertedCount;
+            response.json(responseObj);
+            db.close();
+        });
     });
 });
 
