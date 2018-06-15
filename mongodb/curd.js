@@ -76,9 +76,6 @@ router.get('/api/getTypeJsonData',function(request,response){
 });
 
 router.post('/api/createLesson', function(request,response) {
-
-    console.log(request.body);
-
     var responseObj = {
         "success":true,
         "msg":""
