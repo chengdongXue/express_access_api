@@ -37,7 +37,7 @@ router.get('/api/queryWay',function(req, res, next) {
  * notes:  when you using the express.post way... you best use the postman tool go to test. please choose Body > x-www-form-urlencoded method
  */
 // POST /api/users gets JSON bodies
-router.post('/api/users', function (req, res) {
+router.post('/api/users',function (req, res) {
     if (!req.body.email || !req.body.password) {
         console.log(req.body);
         console.log(req.body.email);
