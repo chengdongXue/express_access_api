@@ -9,6 +9,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var jqueryRouter = require('./routes/jqueryInvokeNodeServer');
 var mongodbRouter = require('./mongodb/curd');
+var corsPermission = require('./routes/cors');
 
 var app = express();
 
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('public/images'));
+app.use(corsPermission.permission);
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
